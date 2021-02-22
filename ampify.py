@@ -3,59 +3,48 @@ import json
 
 response = requests.get('https://api.ampifymusic.com/packs')
 
-# print(type(response))
-r_dict = response.json()
+response_dict = response.json()
 
-packsList = r_dict['packs']
+dict_str = json.dumps(response_dict, indent=2)  # make data readable
 
-# print(packsList[0])
-# print(packsList[0]['genres'])
+packs_list = response_dict['packs']
 
-# print(r_dict['packs'][0]['genres'])
-print(r_dict.get('packs'))
+## Sort response into set of genres ##
 
 
-# packsList is a list of dictionaries, with key values as numbers 0-49.
-# value of each keynumber is a dictionary with string keys such as id etc. One key is genres, whose value is a list
+def make_genres_set(input_list):
+    genres_set = set()
+
+    for pack in packs_list:
+        pack_genre = pack['genres'][0]
+        # genres_list.append(pack_genre)
+        genres_set.add(pack_genre)
+
+    return genres_set
+
+## Print a list of all the genres ##
 
 
-# search_key = 'genres'
+def print_set_elements(input_set):
+    for element in input_set:
+        print(element)
 
-# make a temp
-# temp = list(r_dict.items())
-# print(temp)
-
-# the packs is a list
-# [i for i, d in enumerate(thePacksList) if "genres" in d.keys()]
+# Print out a list of all the packs in the genre 'hip-hop':
 
 
-# print(response)
-
-# print(dir(response))  # shows us atributes and methods accessible within this response object
-
-
-# for key in r_dict.keys():
-#    value = r_dict[key]
-#    print(key, "=", value)
+def print_pack_by_value(input_list, value):
+    for sub in input_list:
+        if value in sub['genres'][0]:
+            print(sub['name'])
 
 
-# now we can access these values just like any other dictionary
+### Function calls ###
+print("GENRES:")
+print_set_elements(make_genres_set(packs_list))
 
-# iterate JSON ke-value pairs:
+print('')
+print("PACKS OF GENRE 'HIP-HOP:")
+print_pack_by_value(packs_list, 'hip-hop')
 
-student = {'name': 'John', 'age': 25, 'courses': ['Math', 'Compsci']}
-
-# print(student['name'])
-
-## error handling ##
-# try:
-#    print(student['weight'])
-# except KeyError:
-#    print("The student has no weight.")
-
-# help(student.get)
-
-# print(r_dict.get('packs'))
-
-# this will return true for anything less than a 400 response, i.e. if there are no client or server errors.
-# print(response.ok)
+#genres_set = make_genres_set(packs_list)
+#genres_dict = dict.fromkeys(genres_set, [])
